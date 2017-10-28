@@ -15,7 +15,7 @@ library(data.table)
 # Import in the Muscle Transcriptome database -----------------------------
 
 # Set the initial view to be the Myod1 gene, to save on processing time.
-initGene = ''
+initGene = 'Myod1'
 
 data = readRDS('data/rat-expr.rds')
 

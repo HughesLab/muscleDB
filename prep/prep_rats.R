@@ -26,13 +26,13 @@ rats = rats %>%
          geneLink = url,
          name2 = str_replace_all(name2, '\\)', ''),
          shortName = name1, 
-         gene = ifelse(is.na(name2), NA, name1),
+         gene = ifelse(is.na(name2), '', name1),
          transcript = ifelse(is.na(name2), name1, name2),
          lb = expr - sem,
          ub = expr + sem) %>% 
   select(transcript, id, tissue, expr, lb, ub, gene, GO, geneLink, transcriptLink, shortName, dplyr::contains('_q')) %>% 
   rowwise() %>% 
-  mutate(GO = ifelse(is.null(GO), NA, paste(GO, collapse = " | ")),
+  mutate(GO = ifelse(is.null(GO), '', paste(GO, collapse = " | ")),
          tissue = case_when(tissue == "Female_EDL" ~"EDL (female)", 
                              tissue == "Female_SOL" ~ "soleus (female)", 
                              tissue == "Male_EDL" ~ "EDL (male)", 

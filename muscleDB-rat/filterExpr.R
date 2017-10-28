@@ -14,7 +14,6 @@ filterData <- reactive({
   # geneInput = paste0(input$geneInput, '%') # For SQL-based filtering
   geneInput = paste0('^', input$geneInput)
   
-  print(geneInput)
   
   # check if the data is the initial view, or all the data.
   if (input$geneInput == initGene) {
