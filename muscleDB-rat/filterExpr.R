@@ -14,12 +14,15 @@ filterData <- reactive({
   # geneInput = paste0(input$geneInput, '%') # For SQL-based filtering
   geneInput = paste0('^', input$geneInput)
   
+  print(geneInput)
+  
   # check if the data is the initial view, or all the data.
   if (input$geneInput == initGene) {
     data2filter = initData
   } else {
     data2filter = data
   }
+  
   
   if(is.null(input$GO)){
     ont = ""
@@ -39,24 +42,9 @@ filterData <- reactive({
   
   # Generate key for muscles
   muscleSymbols = plyr::mapvalues(selMuscles,
-                                  from = c('atria', 'left ventricle',
-                                           'total aorta', 'right ventricle',
-                                           'soleus', 
-                                           'diaphragm',
-                                           'eye', 'EDL', 'FDB',
-                                           'thoracic aorta', 'abdominal aorta',
-                                           'tongue', 'masseter',
-                                           'gastrocnemius', 'quadriceps', 'tibialis anterior',
-                                           'plantaris'),
-                                  to = c('ATR', 'LV',
-                                         'AOR', 'RV',
-                                         'SOL', 'DIA',
-                                         'EYE', 'EDL', 'FDB',
-                                         'TA', 'AA', 
-                                         'TON', 'MAS',
-                                         'GAS', 'QUAD', 'TAN',
-                                         'PLA'),
-                                  warn_missing = TRUE)
+                                  to = c("Female_EDL", "Female_SOL", "Male_EDL", "Male_SOL"),
+                                  from = c("EDL (female)", "soleus (female)", "EDL (male)", "soleus (male)"),
+                                  warn_missing = FALSE)
   
   
   qCol = paste0(paste0(sort(muscleSymbols), collapse = '.'), '_q')

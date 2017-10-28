@@ -13,7 +13,7 @@ sidebar <- dashboardSidebar(
   #             choices = NULL,
   #             selected = "Myod1"),
   
-  textInput("geneInput", label = "search symbol (e.g. Myod1", value = initGene),
+  textInput("geneInput", label = "search symbol (e.g. Myod1)", value = initGene),
   
   # Search form for ontology
   # sidebarSearchForm(label = "search ontology (axon)", "GO", "searchButton"),

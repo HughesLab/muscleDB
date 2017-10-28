@@ -25,24 +25,11 @@ cardColor = '#ad494a'
 skelColor = '#5254a3'
 smoothColor = '#bd9e39'
 
-cols = c('atria' = cardColor,
-  'left ventricle' = cardColor,
-  'right ventricle' = cardColor,
-  'total aorta' = smoothColor,
-  'thoracic aorta' = smoothColor,
-  'abdominal aorta' = smoothColor,
-  
-  'soleus' = skelColor,
-  'tibialis anterior' = skelColor,
-  'quadriceps'  = skelColor,
-  'gastrocnemius' = skelColor,
-  'diaphragm' = skelColor,
-  'eye' = skelColor,
-  'EDL' = skelColor,
-  'FDB'  = skelColor,
-  'masseter' = skelColor,
-  'tongue' = skelColor,
-  'plantaris' = skelColor)
+cols = c(
+  'soleus (female)' = skelColor,
+  'EDL (female)' = skelColor,
+  'soleus (male)' = skelColor,
+  'EDL (male)' = skelColor)
 
 getPage <- reactive({
   page = (input$nextPage - input$prevPage)
@@ -70,7 +57,7 @@ output$plot1 <- renderPlot({
   
   data2Plot = filteredData %>% 
     filter(transcript %in% transcriptList) %>% 
-    mutate(transFacet = paste0(gene, '(', transcript, ')')) # Merge names for more informative output.
+    mutate(transFacet = paste0(gene, '\n (', transcript, ')')) # Merge names for more informative output.
   
   numTissues = length(unique(data2Plot$tissue))
   
@@ -87,17 +74,6 @@ output$plot1 <- renderPlot({
     
     yLim = c(-0.1*maxExpr, maxExpr)
     
-    # ggplot(data2Plot, aes(y= expr, x=tissue, label = round(expr, 1))) +
-    #   coord_flip(ylim = yLim) +
-    #   geom_errorbar(aes(x = tissue, ymin = lb, ymax = ub), 
-    #                 width = 0.3, size = 0.5,
-    #                 colour = '#6d6e71') +
-    #   geom_bar(stat = "identity", fill = 'dodgerblue', alpha = 0.7) +
-    #   geom_text(aes(x = tissue, y = 0), hjust = 1.1,
-    #             colour = 'blue') +
-    #   facet_wrap(~transFacet) +
-    #   theme_xOnly(textSize)
-    
     
     # bar plot
     ggplot(data2Plot, aes(y = expr, x = tissue, 
@@ -105,28 +81,12 @@ output$plot1 <- renderPlot({
       
       coord_flip(ylim = yLim) +
       
-      scale_fill_manual(values = c(cardColor, cardColor, cardColor,
-                                   smoothColor, smoothColor, smoothColor, 
-                                   rep(skelColor, 11)),
-                        limits = c('atria',
-                                   'left ventricle',
-                                   'right ventricle',
-                                   
-                                   'total aorta',
-                                   'thoracic aorta',
-                                   'abdominal aorta',
-                                   
-                                   'soleus',
-                                   'tibialis anterior',
-                                   'quadriceps',
-                                   'gastrocnemius',
-                                   'diaphragm',
-                                   'eye',
-                                   'EDL',
-                                   'FDB',
-                                   'masseter',
-                                   'tongue',
-                                   'plantaris')) +
+      scale_fill_manual(values = c(rep(skelColor, 4)),
+                        limits = c('soleus (female)',
+                                   'EDL (female)', 
+                                   'soleus (male)',
+                                   'EDL (male)')) +
+      
       
       # lollipops
       geom_segment(aes(x = tissue, 
@@ -141,13 +101,13 @@ output$plot1 <- renderPlot({
                    colour = grey50K, alpha = 0.5) +
       # points
       geom_point(aes(fill = tissue),
-        size = 4, colour = grey90K, 
+                 size = 4, colour = grey90K, 
                  stroke = 0.2, shape = 21) + 
-
+      
       geom_text(aes(x = tissue, y = 0), hjust = 1.1,
                 colour = grey60K) +
       
-
+      
       ylab('expression (FPKM)') + 
       facet_wrap(~transFacet) +
       theme_xOnly(textSize)
