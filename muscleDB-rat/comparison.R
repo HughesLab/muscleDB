@@ -1,15 +1,15 @@
 
 # themes ------------------------------------------------------------------
 
-theme_XGrid = function (font_normal = "Lato", font_semi = "Lato", font_light = "Lato Light", 
-          legend.position = "none", legend.direction = "horizontal", 
-          panel_spacing = 3, font_axis_label = 12, font_axis_title = font_axis_label * 
-            1.15, font_facet = font_axis_label * 1.15, font_legend_title = font_axis_label, 
-          font_legend_label = font_axis_label * 0.8, font_subtitle = font_axis_label * 
-            1.2, font_title = font_axis_label * 1.3, grey_background = FALSE, 
-          background_colour = grey10K, projector = FALSE) 
+theme_XGrid = function (font_normal = "sans", font_semi = "sans", font_light = "sans", 
+                        legend.position = "none", legend.direction = "horizontal", 
+                        panel_spacing = 3, font_axis_label = 12, font_axis_title = font_axis_label * 
+                          1.15, font_facet = font_axis_label * 1.15, font_legend_title = font_axis_label, 
+                        font_legend_label = font_axis_label * 0.8, font_subtitle = font_axis_label * 
+                          1.2, font_title = font_axis_label * 1.3, grey_background = FALSE, 
+                        background_colour = grey10K, projector = FALSE) 
 {
-
+  
   background_colour = ifelse(grey_background == TRUE, background_colour, 
                              NA)
   if (grey_background == TRUE) {
@@ -21,15 +21,15 @@ theme_XGrid = function (font_normal = "Lato", font_semi = "Lato", font_light = "
   theme(title = element_text(size = font_title, colour = "#414042", 
                              family = font_normal), plot.subtitle = element_text(size = font_subtitle, 
                                                                                  colour = "#636466", family = font_semi), text = element_text(family = font_light, 
-                                                                                                                                                    colour = "#6d6e71", hjust = 0.5), axis.line = element_blank(), 
+                                                                                                                                              colour = "#6d6e71", hjust = 0.5), axis.line = element_blank(), 
         axis.ticks.x = element_blank(), axis.line.y = element_blank(), 
         axis.ticks.y = element_blank(), axis.text.x = element_text(size = font_axis_label, 
                                                                    colour = "#6d6e71", family = font_light), axis.title.x = element_text(size = font_axis_title, 
-                                                                                                                                           colour = "#6d6e71", family = font_semi), axis.text.y = element_text(size = font_axis_label, 
-                                                                                                                                                                                                                 colour = "#6d6e71", family = font_light), axis.title.y = element_blank(), 
+                                                                                                                                         colour = "#6d6e71", family = font_semi), axis.text.y = element_text(size = font_axis_label, 
+                                                                                                                                                                                                             colour = "#6d6e71", family = font_light), axis.title.y = element_blank(), 
         legend.position = legend.position, legend.title = element_text(size = font_legend_title, 
                                                                        colour = "#6d6e71", family = font_semi), legend.text = element_text(size = font_legend_label, 
-                                                                                                                                             colour = "#6d6e71", family = font_semi), legend.direction = legend.direction, 
+                                                                                                                                           colour = "#6d6e71", family = font_semi), legend.direction = legend.direction, 
         panel.background = element_rect(fill = "white", colour = NA, 
                                         size = NA), plot.background = element_rect(fill = background_colour, 
                                                                                    colour = NA, size = NA, linetype = 1), panel.spacing = unit(panel_spacing, 
@@ -72,6 +72,7 @@ output$compPlot = renderPlot({
   # filter data
   filteredData = filterData() %>% 
     mutate(fullName = paste0(gene, ' (', transcript, ')'))
+  
   
   
   # Check that there's more than one gene to compare.
@@ -120,21 +121,24 @@ output$compPlot = renderPlot({
     # Refactorize -------------------------------------------------------------
     
     # Reverse tissue names
-    filteredData$tissue = factor(filteredData$tissue, levels = rev(levels(filteredData$tissue)))
+    # filteredData$tissue = factor(filteredData$tissue, levels = rev(levels(filteredData$tissue)))
+    
+    
     
     if (input$sortBy == 'most') {
       orderNames = filteredData %>% 
-        arrange(desc(corr)) # Sort by correlation coefficient, in descending order
-      
-      orderNames = orderNames$fullName
+        distinct(fullName, corr) %>% 
+        arrange(desc(corr)) %>% # Sort by correlation coefficient, in descending order
+        pull(fullName)
       
     } else if (input$sortBy == 'least') {
       orderNames = filteredData %>% 
-        arrange(corr) # Sort by correlation coefficient, in ascending order
+        distinct(fullName, corr) %>% 
+        arrange(corr) %>% # Sort by correlation coefficient, in ascending order
+        pull(fullName)
       
-      orderNames = orderNames$fullName
     } else {
-      orderNames = sort(filteredData$fullName)
+      orderNames = unique(sort(filteredData$fullName))
     }
     
     

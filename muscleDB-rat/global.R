@@ -6,8 +6,8 @@ library(DT)
 library(d3heatmap)
 library(ggvis)
 library(ggplot2)
-# library(dtplyr)
 library(data.table)
+library(RColorBrewer)
 
 
 
@@ -20,8 +20,6 @@ initGene = 'Myod1'
 data = readRDS('data/rat-expr.rds')
 
 initData = data %>% filter(shortName %like% initGene)
-
-glimpse(initData)
 
 GOs = readRDS("data/rat-ontology.rds")
 
